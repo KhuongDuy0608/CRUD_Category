@@ -1,8 +1,10 @@
 var express = require('express');
 var router = express.Router();
 let productModel = require('../schemas/products')
+let { check_authentication,check_authorization } = require('../utils/check_auth')
 
-let {CreateErrorRes,CreateSuccessRes} = require('../utils/responseHandler')
+let {CreateErrorRes,CreateSuccessRes} = require('../utils/responseHandler');
+const constants = require('../utils/constants');
 
 /* GET users listing. */
 router.get('/', async function(req, res, next) {
@@ -24,7 +26,7 @@ router.get('/:id', async function(req, res, next) {
   }
   
 });
-router.post('/', async function(req, res, next) {
+router.post('/', check_authentication,check_authorization(constants.MOD_PERMISSION),async function(req, res, next) {
   try {
     let body = req.body
     let newProduct = new productModel({
@@ -39,7 +41,7 @@ router.post('/', async function(req, res, next) {
     next(error)
   }
 });
-router.put('/:id', async function(req, res, next) {
+router.put('/:id', check_authentication, check_authorization(constants.MOD_PERMISSION),async function(req, res, next) {
   let id = req.params.id;
   try {
     let body = req.body
@@ -64,7 +66,7 @@ router.put('/:id', async function(req, res, next) {
     next(error)
   }
 });
-router.delete('/:id', async function(req, res, next) {
+router.delete('/:id', check_authentication,check_authorization(constants.ADMIN_PERMISSION),async function(req, res, next) {
   let id = req.params.id;
   try {
     let body = req.body
