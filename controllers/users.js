@@ -22,7 +22,7 @@ module.exports = {
         try {
             let role = await roleModel.findOne({
                 name: rolename
-            })
+            }) 
             if (role) {
                 let user = new userModel({
                     username: username,
