@@ -13,6 +13,20 @@ module.exports = {
             path:'role',select:'name'
         });
     },
+    GetUserByEmail: async function (email) {
+        return await userModel.findOne({
+            email:email
+        }).populate({
+            path:'role',select:'name'
+        });
+    },
+    GetUserByToken: async function (token) {
+        return await userModel.findOne({
+            resetPasswordToken:token
+        }).populate({
+            path:'role',select:'name'
+        });
+    },
     GetUserByUsername: async function (username) {
         return await userModel.findOne({
             username: username
@@ -22,7 +36,7 @@ module.exports = {
         try {
             let role = await roleModel.findOne({
                 name: rolename
-            }) 
+            })
             if (role) {
                 let user = new userModel({
                     username: username,
@@ -67,12 +81,12 @@ module.exports = {
     CheckLogin: async function (username, password) {
         let user = await this.GetUserByUsername(username);
         if (!user) {
-            throw new Error("Username hoac password khong dung")
+            throw new Error("Username hoc password khong dung")
         } else {
             if (bcrypt.compareSync(password, user.password)) {
                 return  user._id;
             } else {
-                throw new Error("Username hoac password khong dung")
+                throw new Error("Username hoc password khong dung")
             }
         }
     },

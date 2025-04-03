@@ -1,18 +1,24 @@
-var roleModel = require('../schemas/roles')
+const menuModel = require('../schemas/menu'); 
+
 module.exports = {
-    GetAllRoles: async function(){
-        return await roleModel.find({
-            isDeleted:false
-          })
+    GetAllMenus: async function() {
+        try {
+            return await menuModel.find({ isDeleted: false });
+        } catch (error) {
+            throw new Error(error.message);
+        }
     },
-    CreateARole:async function(name){
-       try {
-        let newRole = new roleModel({
-            name:name
-        })
-        return await newRole.save()
-       } catch (error) {
-        throw new Error(error.message)
-       }
+
+    CreateAMenu: async function(text, url, parentId) {
+        try {
+            let newMenu = new menuModel({
+                text: text,
+                url: url,
+                parent: parentId || null 
+            });
+            return await newMenu.save();
+        } catch (error) {
+            throw new Error(error.message);
+        }
     }
-}
+};

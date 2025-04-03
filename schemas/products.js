@@ -1,4 +1,6 @@
 let mongoose = require('mongoose');
+let slugify = require('slugify');
+
 let productSchema = mongoose.Schema({
     name:{
         type:String,
@@ -29,6 +31,10 @@ let productSchema = mongoose.Schema({
         ref:'category',
         required:true
     },
+    slug:{
+        type:String,
+        unique:true
+    },
     isDeleted:{
         type:Boolean,
         default:false
@@ -36,5 +42,12 @@ let productSchema = mongoose.Schema({
 },{
     timestamps:true
 })
+
+productSchema.pre('save', function (next) {
+    if (this.name) {
+        this.slug = slugify(this.name, { lower: true, strict: true });
+    }
+    next();
+});
 module.exports = mongoose.model('product',productSchema)
 // products

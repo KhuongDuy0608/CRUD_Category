@@ -3,7 +3,10 @@ var router = express.Router();
 let userController = require('../controllers/users')
 let { check_authentication,check_authorization } = require('../utils/check_auth')
 let { CreateSuccessRes, CreateErrorRes } = require('../utils/responseHandler')
-let constants = require('../utils/constants')
+let constants = require('../utils/constants');
+const { validatorCreateUser, validate } = require('../utils/validators');
+
+
 /* GET users listing. */
 router.get('/', check_authentication,
   check_authorization(constants.MOD_PERMISSION)
@@ -30,7 +33,7 @@ router.get('/:id', check_authentication, async function (req, res, next) {
   }
 });
 
-router.post('/',check_authentication, check_authorization(constants.ADMIN_PERMISSION), async function (req, res, next) {
+router.post('/',check_authentication, check_authorization(constants.ADMIN_PERMISSION), validate, async function (req, res, next) {
   try {
     let body = req.body
     let user = await userController.CreateAnUser(
